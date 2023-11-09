@@ -1,4 +1,4 @@
-package com.example.clickup;
+package uz.kuvondikov.clickup;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

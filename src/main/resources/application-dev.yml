@@ -1,0 +1,66 @@
+spring:
+  #  banner:
+  #    location: banner.txt
+  application:
+    name: ${APP_NAME:CLICK_UP}
+  liquibase:
+    enabled: false
+    change-log: db/changelog/master.xml
+  datasource:
+    url: jdbc:postgresql://localhost:5432/click_up_db
+    username: postgres
+    password: root123
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: create
+    show-sql: true
+    open-in-view: true
+    properties:
+      hibernate:
+        show_sql: true
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: muzaffarovichn08@gmail.com
+    password: lhoc bsfi rfkp tklu
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+server:
+  port: 1313
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui
+#    operations-sorter: method
+#    try-it-out-enabled: true
+#  api-docs:
+#    path: /api/docs
+#
+#file:
+#  dir:
+#    file-uploads-url: /home/test/Java/Personal/click-up/upload
+#    compressed-images-url: /home/test/Java/Personal/click-up/upload
+#
+#
+
+#
+#springdoc:
+#  swagger-ui:
+#    path: /swagger-ui
+#    groups-order: asc
+#    operations-sorter: alpha
+#    try-it-out-enabled: true
+#    tags-sorter: alpha
+#    display-request-duration: true
+#    doc-expansion: "none"
+#  api-docs:
+#    path: /api/docs
