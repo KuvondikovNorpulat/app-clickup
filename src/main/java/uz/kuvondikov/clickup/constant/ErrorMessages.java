@@ -12,4 +12,6 @@ public class ErrorMessages {
     public static final String EXCEPTION_OCCURRED_WHILE_SAVING_FILE_WITH_ID = "Exception Occurred while downloading file with id :";
     public static final String ITEM_NOT_FOUND_WITH_THIS_ID = "Item not found with this id : ";
     public static final String AUTH_USER_EMAIL_ALREADY_EXISTS = "Email address already exist with name :";
+    public static final String WRONG_EMAIL_OR_VERIFICATION_CODE = "Email or verification code wrong";
+    public static final String TELEGRAM_BOT_CONFIG_EXCEPTION = "Telegram bot configuration exception";
 }

@@ -2,11 +2,9 @@ package uz.kuvondikov.clickup.dto.user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import uz.kuvondikov.clickup.entity.Attachment;
 import uz.kuvondikov.clickup.enums.Color;
-import uz.kuvondikov.clickup.enums.SystemRole;
 
 import java.io.Serializable;
 
@@ -20,8 +18,6 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 public class AuthUserRegisterDto implements Serializable {
-    @NotBlank
-    String password;
 
     @NotBlank
     private String firstname;
@@ -31,8 +27,10 @@ public class AuthUserRegisterDto implements Serializable {
 
     @Email
     private String email;
+
+    @NotBlank
+    String password;
+
     private Color color;
 
-    private @NotNull
-    Attachment attachment;
 }

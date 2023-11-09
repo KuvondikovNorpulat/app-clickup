@@ -11,6 +11,7 @@ import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import uz.kuvondikov.clickup.constant.ErrorMessages;
+import uz.kuvondikov.clickup.controller.base.AbstractController;
 import uz.kuvondikov.clickup.entity.AuthUser;
 import uz.kuvondikov.clickup.entity.EmailDetails;
 import uz.kuvondikov.clickup.exception.BadRequestException;
@@ -25,6 +26,8 @@ import java.util.concurrent.CompletableFuture;
 @Service
 @RequiredArgsConstructor
 public class EmailServiceImpl implements EmailService {
+
+    private static final String PATH = AbstractController.PATH;
 
     private final JavaMailSender javaMailSender;
     private final AuthUserRepository userRepository;
@@ -88,9 +91,19 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Async
-    public void sendEmailMessage(String email, String verificationCode) {
-        String verificationUrl = "http://localhost:1313/api/auth/active" + "?email=" + email + "&verificationCode=" + verificationCode;
-        EmailDetails details = EmailDetails.builder().recipient(email).msgBody(verificationUrl).subject("Spring Boot security").build();
+    @Override
+    public void sendActivationAccountMessage(String email, String verificationCode) {
+        String verificationUrl = "http://localhost:1313"+PATH+"/auth/active" + "?email=" + email + "&verificationCode=" + verificationCode;
+        EmailDetails details = EmailDetails.builder().recipient(email).msgBody(verificationUrl).subject("APPLICATION CLICK UP").build();
+        sendSimpleMail(details);
+    }
+
+    @Async
+    @Override
+    public void sendForgetPasswordMessage(String email, String verificationCode) {
+        String verificationUrl = "http://localhost:1313"+PATH+"/auth/restart-password" + "?email=" + email + "&verificationCode=" + verificationCode;
+
+        EmailDetails details = EmailDetails.builder().recipient(email).msgBody(verificationUrl).subject("APPLICATION CLICK UP").build();
         sendSimpleMail(details);
     }
 

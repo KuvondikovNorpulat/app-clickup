@@ -13,5 +13,5 @@ public interface AuthUserRepository extends JpaRepository<AuthUser, Long>, BaseR
 
     boolean existsByEmailAndDeletedFalse(String email);
 
-    Optional<Object> findByEmail(String username);
+    Optional<AuthUser> findByEmailAndDeletedFalse(String email);
 }

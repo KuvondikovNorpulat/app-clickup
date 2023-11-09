@@ -24,6 +24,9 @@ public class SecurityBaseConfiguration {
     private static final String[] WHITE_LIST = {
             "/api/v1/auth/login",
             "/api/v1/auth/register",
+            "/api/v1/auth/active/**",
+            "/api/v1/auth/forget-password/**",
+            "/api/v1/auth/restart-password/**",
             "/api/v1/refresh/token",
             "/swagger-ui/**",
             "/api/docs/**"

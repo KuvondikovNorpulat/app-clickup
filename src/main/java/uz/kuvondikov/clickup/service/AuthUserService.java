@@ -20,4 +20,10 @@ public interface AuthUserService extends BaseService {
     Long update(AuthUserUpdateDto updateDto);
 
     Long delete(Long id);
+
+    Long accountActivation(String email, String verificationCode);
+
+    Long forgetPassword(String email);
+
+    Long restartPassword(String email, String verificationCode, String newPassword);
 }
