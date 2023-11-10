@@ -81,9 +81,9 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public CompletableFuture<String> activeAccount(String email, String verificationCode) {
-        AuthUser user = userRepository.findAuthUsersByEmailAndDeletedFalse(email).orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND));
+        AuthUser user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(() -> new NotFoundException(ErrorMessages.WRONG_EMAIL_OR_VERIFICATION_CODE));
         if (!user.getVerificationCode().equals(verificationCode))
-            throw new BadRequestException(ErrorMessages.USER_NOT_FOUND);/// TODO: 08/11/23 mos kelmagan verification code
+            throw new BadRequestException(ErrorMessages.WRONG_EMAIL_OR_VERIFICATION_CODE);
         user.setEnabled(true);
         user.setVerificationCode(null);
         userRepository.save(user);
@@ -93,7 +93,7 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendActivationAccountMessage(String email, String verificationCode) {
-        String verificationUrl = "http://localhost:1313"+PATH+"/auth/active" + "?email=" + email + "&verificationCode=" + verificationCode;
+        String verificationUrl = "http://localhost:1313" + PATH + "/auth/active" + "?email=" + email + "&verificationCode=" + verificationCode;
         EmailDetails details = EmailDetails.builder().recipient(email).msgBody(verificationUrl).subject("APPLICATION CLICK UP").build();
         sendSimpleMail(details);
     }
@@ -101,7 +101,7 @@ public class EmailServiceImpl implements EmailService {
     @Async
     @Override
     public void sendForgetPasswordMessage(String email, String verificationCode) {
-        String verificationUrl = "http://localhost:1313"+PATH+"/auth/restart-password" + "?email=" + email + "&verificationCode=" + verificationCode;
+        String verificationUrl = "http://localhost:1313" + PATH + "/auth/restart-password" + "?email=" + email + "&verificationCode=" + verificationCode;
 
         EmailDetails details = EmailDetails.builder().recipient(email).msgBody(verificationUrl).subject("APPLICATION CLICK UP").build();
         sendSimpleMail(details);

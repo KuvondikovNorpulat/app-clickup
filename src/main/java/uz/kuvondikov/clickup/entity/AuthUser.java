@@ -20,7 +20,6 @@ import java.util.List;
 @Getter
 @Setter
 @Entity
-@Table(uniqueConstraints = {@UniqueConstraint(columnNames = {"email","deleted"})})
 public class AuthUser extends AbsMainEntity implements UserDetails {
 
     @Column(nullable = false)
@@ -38,8 +37,9 @@ public class AuthUser extends AbsMainEntity implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Color color;
 
+
     @OneToOne(fetch = FetchType.LAZY)
-    private Attachment attachment;
+    private Attachment avatar;
 
     private String verificationCode;
 
@@ -51,7 +51,6 @@ public class AuthUser extends AbsMainEntity implements UserDetails {
 
     @Enumerated(EnumType.STRING)
     private SystemRole systemRole;
-
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

@@ -24,7 +24,7 @@ public class SecurityConfig {
 
     @Bean
     public UserDetailsService userDetailsService() {
-        return username -> (UserDetails) authUserRepository.findByEmailAndDeletedFalse(username)
+        return username -> (UserDetails) authUserRepository.findByEmail(username)
                 .orElseThrow(() -> new NotFoundException(ErrorMessages.USER_NOT_FOUND + username));
     }
 

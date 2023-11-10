@@ -8,7 +8,8 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.http.MediaType;
 import uz.kuvondikov.clickup.entity.template.AbsLongIdEntity;
-import uz.kuvondikov.clickup.entity.template.AbsMainEntity;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
@@ -16,7 +17,7 @@ import uz.kuvondikov.clickup.entity.template.AbsMainEntity;
 @NoArgsConstructor
 @Entity
 
-public class Attachment extends AbsLongIdEntity {
+public class Attachment extends AbsLongIdEntity implements Serializable {
 
     @Column(nullable = false)
     private String name;
@@ -27,6 +28,6 @@ public class Attachment extends AbsLongIdEntity {
     @Column(nullable = false)
     private Long size;
 
-    private MediaType mediaType;
+    private String mediaType;
 
 }

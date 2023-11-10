@@ -52,47 +52,60 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
     @Override
     public Long register(AuthUserRegisterDto userRegisterDto) {
 
-        if (repository.existsByEmailAndDeletedFalse(userRegisterDto.getEmail()))
-            throw new BadRequestException(AUTH_USER_EMAIL_ALREADY_EXISTS);
+        if (repository.existsByEmailAndDeletedFalseAndEnabledTrue(userRegisterDto.getEmail()))
+            throw new BadRequestException(AUTH_USER_EMAIL_ALREADY_EXISTS + userRegisterDto.getEmail());
 
-        userRegisterDto.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
-        AuthUser authRegisterUser = mapper.fromRegisterDTO(userRegisterDto);
-        authRegisterUser.setSystemRole(SystemRole.SYSTEM_ROLE_USER);
-        String verificationCode = generatedVerificationCode();
-        authRegisterUser.setVerificationCode(verificationCode);
-        authRegisterUser.setAccountNonLocked(true);
-        authRegisterUser.setAccountNonExpired(true);
-        authRegisterUser.setCredentialsNonExpired(true);
-        AuthUser savedUser = repository.save(authRegisterUser);
+        if (repository.existsByEmailAndDeletedFalseAndEnabledFalse(userRegisterDto.getEmail())) {
+            return oldProfileRegister(userRegisterDto);
+        } else {
+            userRegisterDto.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+            AuthUser authRegisterUser = mapper.fromRegisterDTO(userRegisterDto);
+            authRegisterUser.setSystemRole(SystemRole.SYSTEM_ROLE_USER);
+            String verificationCode = generatedVerificationCode();
+            authRegisterUser.setVerificationCode(verificationCode);
+            authRegisterUser.setAccountNonLocked(true);
+            authRegisterUser.setAccountNonExpired(true);
+            authRegisterUser.setCredentialsNonExpired(true);
+            AuthUser savedUser = repository.save(authRegisterUser);
+            emailService.sendActivationAccountMessage(userRegisterDto.getEmail(), verificationCode);
+            return savedUser.getId();
+        }
+    }
 
-        emailService.sendActivationAccountMessage(userRegisterDto.getEmail(), verificationCode);
-        return savedUser.getId();
+    private Long oldProfileRegister(AuthUserRegisterDto userRegisterDto) {
+        AuthUser authUser = repository.findByEmailAndDeletedFalseAndEnabledFalse(userRegisterDto.getEmail()).orElseThrow();
+        authUser.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
+        authUser.setColor(userRegisterDto.getColor());
+        if (userRegisterDto.getAvatar() != null)
+            authUser.setAvatar(userRegisterDto.getAvatar());
+        emailService.sendActivationAccountMessage(authUser.getEmail(), authUser.getVerificationCode());
+        repository.save(authUser);
+        return authUser.getId();
     }
 
     @Override
     public SessionDTO login(AuthUserLoginDto loginDto) {
         authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-        AuthUser authUser = repository.findByEmailAndDeletedFalse(loginDto.getEmail())
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + loginDto.getEmail()));
+        AuthUser authUser = repository.findByEmailAndDeletedFalseAndEnabledTrue(loginDto.getEmail()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + loginDto.getEmail()));
         return jwtService.createSessionDTO(authUser);
     }
 
     @Override
     public AuthUserDto getById(Long id) {
-        AuthUser authUser = repository.findById(id).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + id));
+        AuthUser authUser = repository.findById(id).orElseThrow(() -> new NotFoundException(ITEM_NOT_FOUND_WITH_THIS_ID + id));
         return mapper.toDTO(authUser);
     }
 
     @Override
     public List<AuthUserDto> getAll() {
-        List<AuthUser> authUserList = repository.findAll();
+        List<AuthUser> authUserList = repository.findAllByDeletedFalseAndEnabledTrue();
         return mapper.toDTO(authUserList);
     }
 
     @Override
     public PaginationDTO<List<AuthUserDto>> getList(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "firstname", "lastname", "email");
-        Page<AuthUser> userPage = repository.findAll(pageRequest);
+        Page<AuthUser> userPage = repository.findByDeletedFalseAndEnabledTrue(pageRequest, pageRequest);
         int totalPages = userPage.getTotalPages();
         List<AuthUser> content = userPage.getContent();
         long totalElements = userPage.getTotalElements();
@@ -102,16 +115,14 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
 
     @Override
     public Long update(AuthUserUpdateDto updateDto) {
-        AuthUser authUser = repository.findById(updateDto.getId())
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + updateDto.getId()));
+        AuthUser authUser = repository.findById(updateDto.getId()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + updateDto.getId()));
         AuthUser fromUpdateDTO = mapper.fromUpdateDTO(updateDto, authUser);
         return repository.save(fromUpdateDTO).getId();
     }
 
     @Override
     public Long delete(Long id) {
-        AuthUser authUser = repository.findById(id)
-                .orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + id));
+        AuthUser authUser = repository.findByIdAndDeletedFalse(id).orElseThrow(() -> new NotFoundException(ITEM_NOT_FOUND_WITH_THIS_ID + id));
         authUser.setDeleted(true);
         repository.save(authUser);
         return id;
@@ -119,7 +130,7 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
 
     @Override
     public Long accountActivation(String email, String verificationCode) {
-        AuthUser authUser = repository.findByEmailAndDeletedFalse(email).orElseThrow(() -> new BadRequestException(WRONG_EMAIL_OR_VERIFICATION_CODE));
+        AuthUser authUser = repository.findByEmailAndDeletedFalseAndEnabledFalse(email).orElseThrow(() -> new BadRequestException(WRONG_EMAIL_OR_VERIFICATION_CODE));
         if (!verificationCode.equals(authUser.getVerificationCode()))
             throw new BadRequestException(WRONG_EMAIL_OR_VERIFICATION_CODE);
         authUser.setEnabled(true);
@@ -130,7 +141,7 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
 
     @Override
     public Long forgetPassword(String email) {
-        AuthUser authUser = repository.findAuthUsersByEmailAndDeletedFalse(email).orElseThrow(() -> new BadRequestException(WRONG_EMAIL_OR_VERIFICATION_CODE));
+        AuthUser authUser = repository.findByEmailAndDeletedFalseAndEnabledTrue(email).orElseThrow(() -> new BadRequestException(WRONG_EMAIL_OR_VERIFICATION_CODE));
         String verificationCode = generatedVerificationCode();
         authUser.setVerificationCode(verificationCode);
         repository.save(authUser);
@@ -140,7 +151,7 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
 
     @Override
     public Long restartPassword(String email, String verificationCode, String newPassword) {
-        AuthUser authUser = repository.findByEmailAndDeletedFalse(email).orElseThrow(() -> new BadRequestException(WRONG_EMAIL_OR_VERIFICATION_CODE));
+        AuthUser authUser = repository.findByEmailAndDeletedFalseAndEnabledTrue(email).orElseThrow(() -> new BadRequestException(WRONG_EMAIL_OR_VERIFICATION_CODE));
         if (!verificationCode.equals(authUser.getVerificationCode()))
             throw new BadRequestException(WRONG_EMAIL_OR_VERIFICATION_CODE);
         authUser.setPassword(passwordEncoder.encode(newPassword));

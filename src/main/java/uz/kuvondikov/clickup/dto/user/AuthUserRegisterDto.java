@@ -17,20 +17,19 @@ import java.io.Serializable;
 @NoArgsConstructor
 @AllArgsConstructor
 
-public class AuthUserRegisterDto implements Serializable {
+public class AuthUserRegisterDto {
 
-    @NotBlank
-    private String firstname;
-
-    @NotBlank
-    private String lastname;
-
-    @Email
-    private String email;
 
     @NotBlank
     String password;
-
+    @NotBlank
+    private String firstname;
+    @NotBlank
+    private String lastname;
+    @Email
+    private String email;
     private Color color;
+
+    private Attachment avatar;
 
 }

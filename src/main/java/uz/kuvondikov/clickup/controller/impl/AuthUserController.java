@@ -1,7 +1,6 @@
 package uz.kuvondikov.clickup.controller.impl;
 
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import uz.kuvondikov.clickup.controller.AuthController;
 import uz.kuvondikov.clickup.controller.base.AbstractController;
@@ -31,8 +30,7 @@ public class AuthUserController extends AbstractController<AuthUserService> impl
     }
 
     @Override
-    public ResponseEntity<DataDTO<Long>> accountActivation(String email,
-                                                           String verificationCode) {
+    public ResponseEntity<DataDTO<Long>> accountActivation(String email, String verificationCode) {
         Long authUserId = service.accountActivation(email, verificationCode);
         return ResponseEntity.ok(new DataDTO<>(authUserId));
     }
@@ -44,16 +42,13 @@ public class AuthUserController extends AbstractController<AuthUserService> impl
     }
 
     @Override
-    public ResponseEntity<DataDTO<Long>> restartPassword(String email,
-                                                         String verificationCode,
-                                                         String newPassword) {
+    public ResponseEntity<DataDTO<Long>> restartPassword(String email, String verificationCode, String newPassword) {
         Long userId = service.restartPassword(email, verificationCode, newPassword);
         return ResponseEntity.ok(new DataDTO<>(userId));
     }
 
     @Override
-    public ResponseEntity<DataDTO<PaginationDTO<List<AuthUserDto>>>> getList(int page,
-                                                                             int size) {
+    public ResponseEntity<DataDTO<PaginationDTO<List<AuthUserDto>>>> getList(int page, int size) {
         PaginationDTO<List<AuthUserDto>> paginationDTO = service.getList(page, size);
         return ResponseEntity.ok(new DataDTO<>(paginationDTO));
     }
