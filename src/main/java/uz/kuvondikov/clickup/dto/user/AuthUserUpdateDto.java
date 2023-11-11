@@ -21,7 +21,6 @@ import java.io.Serializable;
 
 public class AuthUserUpdateDto implements Serializable {
     Color color;
-    private Long id;
     @NotBlank
     private String firstname;
     @NotBlank

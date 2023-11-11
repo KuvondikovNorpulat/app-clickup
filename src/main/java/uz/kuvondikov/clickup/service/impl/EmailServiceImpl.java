@@ -1,27 +1,19 @@
 package uz.kuvondikov.clickup.service.impl;
 
+import jakarta.mail.Message;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
-import uz.kuvondikov.clickup.constant.ErrorMessages;
 import uz.kuvondikov.clickup.controller.base.AbstractController;
-import uz.kuvondikov.clickup.entity.AuthUser;
 import uz.kuvondikov.clickup.entity.EmailDetails;
-import uz.kuvondikov.clickup.exception.BadRequestException;
-import uz.kuvondikov.clickup.exception.NotFoundException;
+import uz.kuvondikov.clickup.exception.MailException;
 import uz.kuvondikov.clickup.repository.AuthUserRepository;
 import uz.kuvondikov.clickup.service.EmailService;
-
-import java.io.File;
-import java.util.Objects;
-import java.util.concurrent.CompletableFuture;
 
 @Service
 @RequiredArgsConstructor
@@ -38,64 +30,31 @@ public class EmailServiceImpl implements EmailService {
     @Override
     public void sendSimpleMail(EmailDetails details) {
         try {
-
             SimpleMailMessage mailMessage = new SimpleMailMessage();
-
             mailMessage.setFrom(sender);
             mailMessage.setTo(details.getRecipient());
             mailMessage.setText(details.getMsgBody());
             mailMessage.setSubject(details.getSubject());
-
             javaMailSender.send(mailMessage);
         } catch (Exception ignored) {
         }
     }
 
+    @Async
     @Override
-    public String sendMailWithAttachment(EmailDetails details) {
-
-        MimeMessage mimeMessage = javaMailSender.createMimeMessage();
-        MimeMessageHelper mimeMessageHelper;
-
+    public void sendActivationAccountMessage(String toEmail, String verificationCode) {
         try {
-
-            mimeMessageHelper = new MimeMessageHelper(mimeMessage, true);
-            mimeMessageHelper.setFrom(sender);
-            mimeMessageHelper.setTo(details.getRecipient());
-            mimeMessageHelper.setText(details.getMsgBody());
-            mimeMessageHelper.setSubject(details.getSubject());
-
-            FileSystemResource file = new FileSystemResource(new File(details.getAttachment()));
-
-            mimeMessageHelper.addAttachment(Objects.requireNonNull(file.getFilename()), file);
-
-            javaMailSender.send(mimeMessage);
-            return "Mail sent Successfully";
+            MimeMessage mailMessage = javaMailSender.createMimeMessage();
+            mailMessage.setRecipients(Message.RecipientType.TO, toEmail);
+            mailMessage.setSubject("Please verify");
+            String verificationUrl = "http://localhost:1313" + PATH + "/auth/active" + "?email=" + toEmail + "&verificationCode=" + verificationCode;
+            mailMessage.setContent(String.format("""
+                    <h1>If you registered out web-site, please verify your account via press link </h1>
+                    <button style="background-color: #6666ee; color: white"><a href="%s">Verify account</a></button>""", verificationUrl), "text/html; charset=utf-8");
+            javaMailSender.send(mailMessage);
         } catch (MessagingException e) {
-
-            return "Error while sending mail!!!";
-
+            throw new MailException(e.getMessage());
         }
-    }
-
-    @Async
-    @Override
-    public CompletableFuture<String> activeAccount(String email, String verificationCode) {
-        AuthUser user = userRepository.findByEmailAndDeletedFalse(email).orElseThrow(() -> new NotFoundException(ErrorMessages.WRONG_EMAIL_OR_VERIFICATION_CODE));
-        if (!user.getVerificationCode().equals(verificationCode))
-            throw new BadRequestException(ErrorMessages.WRONG_EMAIL_OR_VERIFICATION_CODE);
-        user.setEnabled(true);
-        user.setVerificationCode(null);
-        userRepository.save(user);
-        return CompletableFuture.completedFuture("Your account active");
-    }
-
-    @Async
-    @Override
-    public void sendActivationAccountMessage(String email, String verificationCode) {
-        String verificationUrl = "http://localhost:1313" + PATH + "/auth/active" + "?email=" + email + "&verificationCode=" + verificationCode;
-        EmailDetails details = EmailDetails.builder().recipient(email).msgBody(verificationUrl).subject("APPLICATION CLICK UP").build();
-        sendSimpleMail(details);
     }
 
     @Async

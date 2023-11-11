@@ -1,5 +1,6 @@
 package uz.kuvondikov.clickup.controller;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import uz.kuvondikov.clickup.controller.base.AbstractController;
@@ -13,14 +14,14 @@ import java.util.List;
 public interface AuthController {
 
     @PostMapping("/register")
-    ResponseEntity<DataDTO<Long>> register(@RequestBody AuthUserRegisterDto userRegisterDto);
+    ResponseEntity<DataDTO<Long>> register(@Valid @RequestBody AuthUserRegisterDto userRegisterDto);
 
     @GetMapping("/active")
     ResponseEntity<DataDTO<Long>> accountActivation(@RequestParam String email,
                                                     @RequestParam String verificationCode);
 
     @PostMapping("/login")
-    ResponseEntity<DataDTO<SessionDTO>> login(@RequestBody AuthUserLoginDto authUserLoginDto);
+    ResponseEntity<DataDTO<SessionDTO>> login(@Valid @RequestBody AuthUserLoginDto authUserLoginDto);
 
     @PostMapping("/forget-password")
     ResponseEntity<DataDTO<Long>> forgetPassword(@RequestBody String email);
@@ -41,7 +42,7 @@ public interface AuthController {
     ResponseEntity<DataDTO<AuthUserDto>> getById(@PathVariable Long id);
 
     @PutMapping("/update")
-    ResponseEntity<DataDTO<Long>> update(@RequestBody AuthUserUpdateDto updateDto);
+    ResponseEntity<DataDTO<Long>> update(@Valid @RequestBody AuthUserUpdateDto updateDto);
 
     @DeleteMapping("/delete/{id}")
     ResponseEntity<DataDTO<Long>> delete(@PathVariable Long id);
