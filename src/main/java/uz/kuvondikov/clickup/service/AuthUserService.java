@@ -1,7 +1,8 @@
 package uz.kuvondikov.clickup.service;
 
 import uz.kuvondikov.clickup.dto.PaginationDTO;
-import uz.kuvondikov.clickup.dto.user.*;
+import uz.kuvondikov.clickup.dto.auth_user.*;
+import uz.kuvondikov.clickup.entity.AuthUser;
 import uz.kuvondikov.clickup.service.base.BaseService;
 
 import java.util.List;
@@ -17,7 +18,7 @@ public interface AuthUserService extends BaseService {
 
     PaginationDTO<List<AuthUserDto>> getList(int page, int size);
 
-    Long update(AuthUserUpdateDto updateDto);
+    Long update(AuthUserUpdateDto updateDto, AuthUser authUser);
 
     Long delete(Long id);
 

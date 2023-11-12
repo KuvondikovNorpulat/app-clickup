@@ -26,4 +26,6 @@ public class Workspace extends AbsMainEntity {
 
     @OneToOne(fetch = FetchType.LAZY)
     private Attachment avatar;
+
+    private boolean deleted;
 }

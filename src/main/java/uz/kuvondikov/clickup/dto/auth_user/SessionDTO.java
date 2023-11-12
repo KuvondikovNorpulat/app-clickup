@@ -1,4 +1,4 @@
-package uz.kuvondikov.clickup.dto.user;
+package uz.kuvondikov.clickup.dto.auth_user;
 
 import lombok.Builder;
 import lombok.Getter;

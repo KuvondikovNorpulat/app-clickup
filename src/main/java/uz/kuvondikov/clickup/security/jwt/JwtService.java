@@ -8,7 +8,7 @@ import io.jsonwebtoken.security.Keys;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
-import uz.kuvondikov.clickup.dto.user.SessionDTO;
+import uz.kuvondikov.clickup.dto.auth_user.SessionDTO;
 import uz.kuvondikov.clickup.entity.AuthUser;
 
 import java.security.Key;

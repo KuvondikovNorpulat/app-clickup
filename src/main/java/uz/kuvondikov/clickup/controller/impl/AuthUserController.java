@@ -6,7 +6,8 @@ import uz.kuvondikov.clickup.controller.AuthController;
 import uz.kuvondikov.clickup.controller.base.AbstractController;
 import uz.kuvondikov.clickup.dto.PaginationDTO;
 import uz.kuvondikov.clickup.dto.response.DataDTO;
-import uz.kuvondikov.clickup.dto.user.*;
+import uz.kuvondikov.clickup.dto.auth_user.*;
+import uz.kuvondikov.clickup.entity.AuthUser;
 import uz.kuvondikov.clickup.service.AuthUserService;
 
 import java.util.List;
@@ -66,14 +67,14 @@ public class AuthUserController extends AbstractController<AuthUserService> impl
     }
 
     @Override
-    public ResponseEntity<DataDTO<Long>> update(AuthUserUpdateDto updateDto) {
-        Long id = service.update(updateDto);
+    public ResponseEntity<DataDTO<Long>> update(AuthUserUpdateDto updateDto, AuthUser currentUser) {
+        Long id = service.update(updateDto,currentUser);
         return ResponseEntity.ok(new DataDTO<>(id));
     }
 
     @Override
-    public ResponseEntity<DataDTO<Long>> delete(Long id) {
-        Long deleted = service.delete(id);
+    public ResponseEntity<DataDTO<Long>> delete(AuthUser authUser) {
+        Long deleted = service.delete(authUser.getId());
         return ResponseEntity.ok(new DataDTO<>(deleted));
     }
 }

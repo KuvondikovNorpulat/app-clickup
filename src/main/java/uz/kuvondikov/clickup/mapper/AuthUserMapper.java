@@ -4,9 +4,9 @@ package uz.kuvondikov.clickup.mapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingTarget;
 import org.mapstruct.NullValuePropertyMappingStrategy;
-import uz.kuvondikov.clickup.dto.user.AuthUserDto;
-import uz.kuvondikov.clickup.dto.user.AuthUserRegisterDto;
-import uz.kuvondikov.clickup.dto.user.AuthUserUpdateDto;
+import uz.kuvondikov.clickup.dto.auth_user.AuthUserDto;
+import uz.kuvondikov.clickup.dto.auth_user.AuthUserRegisterDto;
+import uz.kuvondikov.clickup.dto.auth_user.AuthUserUpdateDto;
 import uz.kuvondikov.clickup.entity.AuthUser;
 import uz.kuvondikov.clickup.mapper.base.BaseMapper;
 

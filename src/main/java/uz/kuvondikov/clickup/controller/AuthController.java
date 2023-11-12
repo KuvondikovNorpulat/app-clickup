@@ -3,10 +3,12 @@ package uz.kuvondikov.clickup.controller;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import uz.kuvondikov.clickup.anotation.CurrentUser;
 import uz.kuvondikov.clickup.controller.base.AbstractController;
 import uz.kuvondikov.clickup.dto.PaginationDTO;
+import uz.kuvondikov.clickup.dto.auth_user.*;
 import uz.kuvondikov.clickup.dto.response.DataDTO;
-import uz.kuvondikov.clickup.dto.user.*;
+import uz.kuvondikov.clickup.entity.AuthUser;
 
 import java.util.List;
 
@@ -31,19 +33,19 @@ public interface AuthController {
                                                   @RequestParam String verificationCode,
                                                   @RequestBody String newPassword);
 
-    @GetMapping("/get-page")
+    @GetMapping("/page")
     ResponseEntity<DataDTO<PaginationDTO<List<AuthUserDto>>>> getList(@RequestParam(defaultValue = "0") int page,
                                                                       @RequestParam(defaultValue = "10") int size);
 
-    @GetMapping("/get-all")
+    @GetMapping("/all")
     ResponseEntity<DataDTO<List<AuthUserDto>>> getAll();
 
-    @GetMapping("/get/{id}")
+    @GetMapping("/{id}")
     ResponseEntity<DataDTO<AuthUserDto>> getById(@PathVariable Long id);
 
     @PutMapping("/update")
-    ResponseEntity<DataDTO<Long>> update(@Valid @RequestBody AuthUserUpdateDto updateDto);
+    ResponseEntity<DataDTO<Long>> update(@RequestBody AuthUserUpdateDto updateDto, @CurrentUser AuthUser currentUser);
 
-    @DeleteMapping("/delete/{id}")
-    ResponseEntity<DataDTO<Long>> delete(@PathVariable Long id);
+    @DeleteMapping("/delete")
+    ResponseEntity<DataDTO<Long>> delete(@CurrentUser AuthUser authUser);
 }

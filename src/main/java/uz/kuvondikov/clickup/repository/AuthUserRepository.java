@@ -1,7 +1,6 @@
 package uz.kuvondikov.clickup.repository;
 
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
@@ -14,21 +13,18 @@ import java.util.Optional;
 @Repository
 public interface AuthUserRepository extends JpaRepository<AuthUser, Long>, BaseRepository {
 
-
-    Optional<AuthUser> findByEmailAndDeletedFalse(String email);
-
     List<AuthUser> findAllByDeletedFalseAndEnabledTrue();
 
-    Page<AuthUser> findByDeletedFalseAndEnabledTrue(PageRequest pageRequest, Pageable pageable);
+    Page<AuthUser> findByDeletedFalseAndEnabledTrue(Pageable pageable);
 
     /***
-     * email paramateridagi deleted qilinmagan va active bolgan user borligini aniqlaydi
+     * email paramateridagi deleted qilinmagan va active bolgan auth_user borligini aniqlaydi
      * @return boolean
      */
     boolean existsByEmailAndDeletedFalseAndEnabledTrue(String email);
 
     /***
-     * email paramateridagi deleted qilinmagan va active bolmagan user borligini aniqlaydi
+     * email paramateridagi deleted qilinmagan va active bolmagan auth_user borligini aniqlaydi
      * @return boolean
      */
     boolean existsByEmailAndDeletedFalseAndEnabledFalse(String email);

@@ -8,7 +8,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import uz.kuvondikov.clickup.dto.PaginationDTO;
-import uz.kuvondikov.clickup.dto.user.*;
+import uz.kuvondikov.clickup.dto.auth_user.*;
 import uz.kuvondikov.clickup.entity.AuthUser;
 import uz.kuvondikov.clickup.enums.SystemRole;
 import uz.kuvondikov.clickup.exception.BadRequestException;
@@ -105,7 +105,7 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
     @Override
     public PaginationDTO<List<AuthUserDto>> getList(int page, int size) {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.Direction.ASC, "firstname", "lastname", "email");
-        Page<AuthUser> userPage = repository.findByDeletedFalseAndEnabledTrue(pageRequest, pageRequest);
+        Page<AuthUser> userPage = repository.findByDeletedFalseAndEnabledTrue(pageRequest);
         int totalPages = userPage.getTotalPages();
         List<AuthUser> content = userPage.getContent();
         long totalElements = userPage.getTotalElements();
@@ -114,9 +114,20 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
     }
 
     @Override
-    public Long update(AuthUserUpdateDto updateDto) {
-        AuthUser authUser = repository.findById(updateDto.getId()).orElseThrow(() -> new NotFoundException(USER_NOT_FOUND + updateDto.getId()));
+    public Long update(AuthUserUpdateDto updateDto, AuthUser authUser) {
+
+        if (updateDto.getFirstname().trim().isEmpty())
+            updateDto.setFirstname(null);
+
+        if (updateDto.getLastname().trim().isEmpty())
+            updateDto.setLastname(null);
+
+        String password = updateDto.getPassword();
+        if (password != null && (!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}$")))
+            throw new BadRequestException(NOT_STRENGTH_PASSWORD);
+
         AuthUser fromUpdateDTO = mapper.fromUpdateDTO(updateDto, authUser);
+        fromUpdateDTO.setId(authUser.getId());
         return repository.save(fromUpdateDTO).getId();
     }
 
@@ -159,4 +170,5 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
         repository.save(authUser);
         return authUser.getId();
     }
+
 }
