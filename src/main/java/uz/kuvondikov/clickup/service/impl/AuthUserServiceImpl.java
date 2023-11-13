@@ -76,8 +76,6 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
         AuthUser authUser = repository.findByEmailAndDeletedFalseAndEnabledFalse(userRegisterDto.getEmail()).orElseThrow();
         authUser.setPassword(passwordEncoder.encode(userRegisterDto.getPassword()));
         authUser.setColor(userRegisterDto.getColor());
-        if (userRegisterDto.getAvatar() != null)
-            authUser.setAvatar(userRegisterDto.getAvatar());
         emailService.sendActivationAccountMessage(authUser.getEmail(), authUser.getVerificationCode());
         repository.save(authUser);
         return authUser.getId();

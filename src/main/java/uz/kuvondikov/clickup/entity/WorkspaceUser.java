@@ -1,16 +1,14 @@
 package uz.kuvondikov.clickup.entity;
 
+import lombok.*;
 import uz.kuvondikov.clickup.entity.template.AbsLongIdEntity;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import java.sql.Timestamp;
 
 @Getter
 @Setter
+@Builder
 @NoArgsConstructor
 @AllArgsConstructor
 @Entity

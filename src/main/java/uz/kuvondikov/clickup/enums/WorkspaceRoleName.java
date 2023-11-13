@@ -1,7 +1,7 @@
 package uz.kuvondikov.clickup.enums;
 
 public enum WorkspaceRoleName {
-
-    A,B,C
-
+    WORKSPACE_ROLE_OWNER,
+    WORKSPACE_ROLE_MADERATOR,
+    WORKSPACE_ROLE_USER
 }

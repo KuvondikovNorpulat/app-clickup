@@ -6,7 +6,7 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 
-public enum Permission {
+public enum WorkspacePermissionName {
     PERMISSION_ADD_REMOVE("Add/Remove Members", "Remove and added members"),
     PERMISSION_EDIT("Edit Members", "Edite members");
 

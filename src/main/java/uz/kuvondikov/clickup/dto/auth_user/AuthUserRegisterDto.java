@@ -2,8 +2,8 @@ package uz.kuvondikov.clickup.dto.auth_user;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.*;
-import uz.kuvondikov.clickup.entity.Attachment;
 import uz.kuvondikov.clickup.enums.Color;
 
 /**
@@ -25,9 +25,6 @@ public class AuthUserRegisterDto {
     private String email;
     @NotBlank
     private String password;
-
+    @NotNull
     private Color color;
-
-    private Attachment avatar;
-
 }
