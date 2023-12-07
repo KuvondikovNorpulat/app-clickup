@@ -1,5 +1,6 @@
 package uz.kuvondikov.clickup.service.impl;
 
+import org.jetbrains.annotations.NotNull;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
@@ -51,12 +52,7 @@ public class WorkspaceServiceImpl extends AbstractService<WorkspaceRepository, W
         workspace.setCreatedBy(owner);
         workspace = repository.save(workspace);
 
-        WorkspaceRole workspaceOwner = WorkspaceRole.builder()
-                .workspace(workspace)
-                .name(WorkspaceRoleName.WORKSPACE_ROLE_OWNER.name())
-                .extendsWorkspaceRoleName(null)
-                .build();
-        workspaceRoleRepository.save(workspaceOwner);
+        WorkspaceRole workspaceOwner = getWorkspaceRole(workspace);
 
         WorkspacePermissionName[] workspacePermissionNames = WorkspacePermissionName.values();
         for (WorkspacePermissionName workspacePermissionName : workspacePermissionNames) {
@@ -77,6 +73,37 @@ public class WorkspaceServiceImpl extends AbstractService<WorkspaceRepository, W
         workspaceUserRepository.save(user);
 
         return repository.save(workspace).getId();
+    }
+
+    @NotNull
+    private WorkspaceRole getWorkspaceRole(Workspace workspace) {
+        WorkspaceRole workspaceOwner = WorkspaceRole.builder()
+                .workspace(workspace)
+                .name(WorkspaceRoleName.WORKSPACE_ROLE_OWNER.name())
+                .extendsWorkspaceRoleName(null)
+                .build();
+
+        WorkspaceRole workspaceAdmin = WorkspaceRole.builder()
+                .workspace(workspace)
+                .name(WorkspaceRoleName.WORKSPACE_ROLE_ADMIN.name())
+                .extendsWorkspaceRoleName(null)
+                .build();
+        WorkspaceRole workspaceMember = WorkspaceRole.builder()
+                .workspace(workspace)
+                .name(WorkspaceRoleName.WORKSPACE_ROLE_MEMBER.name())
+                .extendsWorkspaceRoleName(null)
+                .build();
+        WorkspaceRole workspaceGust = WorkspaceRole.builder()
+                .workspace(workspace)
+                .name(WorkspaceRoleName.WORKSPACE_ROLE_GUEST.name())
+                .extendsWorkspaceRoleName(null)
+                .build();
+
+        workspaceRoleRepository.save(workspaceOwner);
+        workspaceRoleRepository.save(workspaceGust);
+        workspaceRoleRepository.save(workspaceMember);
+        workspaceRoleRepository.save(workspaceAdmin);
+        return workspaceOwner;
     }
 
     @Override

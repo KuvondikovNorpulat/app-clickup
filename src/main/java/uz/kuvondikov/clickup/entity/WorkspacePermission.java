@@ -17,7 +17,7 @@ import uz.kuvondikov.clickup.enums.WorkspacePermissionName;
 
 public class WorkspacePermission extends AbsLongIdEntity {
     @ManyToOne(optional = false)
-    private WorkspaceRole workspaceRole;//orinbosar
+    private WorkspaceRole workspaceRole;
 
     @Enumerated(EnumType.STRING)
     private WorkspacePermissionName workspacePermissionName;//add,remove,bla...
