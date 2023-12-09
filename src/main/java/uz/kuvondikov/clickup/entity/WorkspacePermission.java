@@ -20,6 +20,6 @@ public class WorkspacePermission extends AbsLongIdEntity {
     private WorkspaceRole workspaceRole;
 
     @Enumerated(EnumType.STRING)
-    private WorkspacePermissionName workspacePermissionName;//add,remove,bla...
+    private WorkspacePermissionName workspacePermissionName;
 
 }

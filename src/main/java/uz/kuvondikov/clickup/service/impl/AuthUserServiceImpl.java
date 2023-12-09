@@ -114,14 +114,8 @@ public class AuthUserServiceImpl extends AbstractService<AuthUserRepository, Aut
     @Override
     public Long update(AuthUserUpdateDto updateDto, AuthUser authUser) {
 
-        if (updateDto.getFirstname().trim().isEmpty())
-            updateDto.setFirstname(null);
-
-        if (updateDto.getLastname().trim().isEmpty())
-            updateDto.setLastname(null);
-
         String password = updateDto.getPassword();
-        if (password != null && (!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}$")))
+        if (!password.matches("^(?=.*\\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%^&+=_])(?=\\S+$).{8,}$"))
             throw new BadRequestException(NOT_STRENGTH_PASSWORD);
 
         AuthUser fromUpdateDTO = mapper.fromUpdateDTO(updateDto, authUser);

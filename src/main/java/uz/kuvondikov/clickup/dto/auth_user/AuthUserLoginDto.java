@@ -20,5 +20,5 @@ public class AuthUserLoginDto implements Serializable {
     private String email;
 
     @NotBlank
-   private String password;
+    private String password;
 }

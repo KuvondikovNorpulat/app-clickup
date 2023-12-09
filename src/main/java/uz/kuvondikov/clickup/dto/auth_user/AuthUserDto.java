@@ -1,5 +1,6 @@
 package uz.kuvondikov.clickup.dto.auth_user;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import uz.kuvondikov.clickup.entity.Attachment;
 import uz.kuvondikov.clickup.enums.Color;
@@ -20,10 +21,11 @@ public class AuthUserDto implements Serializable {
 
     private Long id;
 
+    @NotBlank
     private String firstname;
-
+    @NotBlank
     private String lastname;
-
+    @NotBlank
     private String email;
 
     private Color color;

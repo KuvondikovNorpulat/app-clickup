@@ -1,5 +1,6 @@
 package uz.kuvondikov.clickup.controller.impl;
 
+import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 import uz.kuvondikov.clickup.controller.AuthController;
@@ -67,7 +68,7 @@ public class AuthUserController extends AbstractController<AuthUserService> impl
     }
 
     @Override
-    public ResponseEntity<DataDTO<Long>> update(AuthUserUpdateDto updateDto, AuthUser currentUser) {
+    public ResponseEntity<DataDTO<Long>> update(@Valid AuthUserUpdateDto updateDto, AuthUser currentUser) {
         Long id = service.update(updateDto,currentUser);
         return ResponseEntity.ok(new DataDTO<>(id));
     }

@@ -1,5 +1,6 @@
 package uz.kuvondikov.clickup.dto.auth_user;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.*;
 import uz.kuvondikov.clickup.entity.Attachment;
 import uz.kuvondikov.clickup.entity.AuthUser;
@@ -17,8 +18,11 @@ import java.io.Serializable;
 @AllArgsConstructor
 
 public class AuthUserUpdateDto implements Serializable {
+    @NotBlank
     private String firstname;
+    @NotBlank
     private String lastname;
+    @NotBlank
     private String password;
     private Color color;
     private Attachment attachment;

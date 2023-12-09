@@ -5,6 +5,8 @@ import org.springframework.web.bind.annotation.RestController;
 import uz.kuvondikov.clickup.anotation.CurrentUser;
 import uz.kuvondikov.clickup.controller.WorkspaceController;
 import uz.kuvondikov.clickup.controller.base.AbstractController;
+import uz.kuvondikov.clickup.dto.MemberDTO;
+import uz.kuvondikov.clickup.dto.MemberEditDTO;
 import uz.kuvondikov.clickup.dto.PaginationDTO;
 import uz.kuvondikov.clickup.dto.response.DataDTO;
 import uz.kuvondikov.clickup.dto.workspace.WorkspaceCreateDto;
@@ -42,19 +44,31 @@ public class WorkspaceControllerImpl extends AbstractController<WorkspaceService
 
     @Override
     public ResponseEntity<DataDTO<PaginationDTO<List<WorkspaceDto>>>> getPage(int page, int size, AuthUser authUser) {
-        PaginationDTO<List<WorkspaceDto>> paginationDTO = service.getPage(page, size,authUser);
+        PaginationDTO<List<WorkspaceDto>> paginationDTO = service.getPage(page, size, authUser);
         return ResponseEntity.ok(new DataDTO<>(paginationDTO));
     }
 
     @Override
     public ResponseEntity<DataDTO<Long>> update(WorkspaceUpdateDto updateDto, @CurrentUser AuthUser currentUser) {
-        Long id = service.update(updateDto,currentUser);
+        Long id = service.update(updateDto, currentUser);
         return ResponseEntity.ok(new DataDTO<>(id));
     }
 
     @Override
     public ResponseEntity<DataDTO<Long>> delete(Long id, AuthUser currentUser) {
-        Long deletedId = service.delete(id,currentUser );
+        Long deletedId = service.delete(id, currentUser);
         return ResponseEntity.ok(new DataDTO<>(deletedId));
+    }
+
+    @Override
+    public ResponseEntity<DataDTO<Long>> changeOwner(MemberEditDTO memberEditDTO, AuthUser currentUser) {
+        Long changedOwnerId = service.changeRole(memberEditDTO, currentUser);
+        return ResponseEntity.ok(new DataDTO<>(changedOwnerId));
+    }
+
+    @Override
+    public ResponseEntity<DataDTO<Long>> inviteNewMember(MemberDTO memberDTO) {
+        Long id = service.inviteMember(memberDTO);
+        return ResponseEntity.ok(new DataDTO<>(id));
     }
 }

@@ -1,5 +1,7 @@
 package uz.kuvondikov.clickup.service;
 
+import uz.kuvondikov.clickup.dto.MemberDTO;
+import uz.kuvondikov.clickup.dto.MemberEditDTO;
 import uz.kuvondikov.clickup.dto.PaginationDTO;
 import uz.kuvondikov.clickup.dto.workspace.WorkspaceCreateDto;
 import uz.kuvondikov.clickup.dto.workspace.WorkspaceDto;
@@ -16,9 +18,12 @@ public interface WorkspaceService extends BaseService {
 
     WorkspaceDto getById(Long id);
 
-    PaginationDTO<List<WorkspaceDto>> getPage(int page, int size,AuthUser authUser);
+    PaginationDTO<List<WorkspaceDto>> getPage(int page, int size, AuthUser authUser);
 
-    Long update(WorkspaceUpdateDto updateDto,AuthUser currentUser);
+    Long update(WorkspaceUpdateDto updateDto, AuthUser currentUser);
 
-    Long delete(Long id,AuthUser currentUser);
+    Long delete(Long id, AuthUser currentUser);
+    Long inviteMember(MemberDTO memberDTO);
+
+    Long changeRole(MemberEditDTO memberEditDTO, AuthUser currentUser);
 }

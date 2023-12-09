@@ -44,7 +44,7 @@ public interface AuthController {
     ResponseEntity<DataDTO<AuthUserDto>> getById(@PathVariable Long id);
 
     @PutMapping("/update")
-    ResponseEntity<DataDTO<Long>> update(@RequestBody AuthUserUpdateDto updateDto, @CurrentUser AuthUser currentUser);
+    ResponseEntity<DataDTO<Long>> update(@Valid @RequestBody AuthUserUpdateDto updateDto, @CurrentUser AuthUser currentUser);
 
     @DeleteMapping("/delete")
     ResponseEntity<DataDTO<Long>> delete(@CurrentUser AuthUser authUser);
