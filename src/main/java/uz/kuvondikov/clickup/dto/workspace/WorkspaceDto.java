@@ -2,10 +2,7 @@ package uz.kuvondikov.clickup.dto.workspace;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import uz.kuvondikov.clickup.dto.auth_user.AuthUserDto;
 import uz.kuvondikov.clickup.entity.Attachment;
 import uz.kuvondikov.clickup.enums.Color;
@@ -19,6 +16,7 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Getter
 @Setter
+@Builder
 
 public class WorkspaceDto implements Serializable {
     @NotNull

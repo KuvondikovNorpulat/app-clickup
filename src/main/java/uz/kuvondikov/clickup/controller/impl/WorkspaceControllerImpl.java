@@ -9,6 +9,7 @@ import uz.kuvondikov.clickup.dto.MemberDTO;
 import uz.kuvondikov.clickup.dto.MemberEditDTO;
 import uz.kuvondikov.clickup.dto.PaginationDTO;
 import uz.kuvondikov.clickup.dto.response.DataDTO;
+import uz.kuvondikov.clickup.dto.workspace.TeamDTO;
 import uz.kuvondikov.clickup.dto.workspace.WorkspaceCreateDto;
 import uz.kuvondikov.clickup.dto.workspace.WorkspaceDto;
 import uz.kuvondikov.clickup.dto.workspace.WorkspaceUpdateDto;
@@ -70,5 +71,23 @@ public class WorkspaceControllerImpl extends AbstractController<WorkspaceService
     public ResponseEntity<DataDTO<Long>> inviteNewMember(MemberDTO memberDTO) {
         Long id = service.inviteMember(memberDTO);
         return ResponseEntity.ok(new DataDTO<>(id));
+    }
+
+    @Override
+    public ResponseEntity<DataDTO<Long>> joinWorkspace(Long workspaceId, AuthUser currentUser) {
+        Long id = service.joinWorkspace(workspaceId,currentUser);
+        return ResponseEntity.ok(new DataDTO<>(id));
+    }
+
+    @Override
+    public ResponseEntity<DataDTO<List<TeamDTO>>> teamWorkspace(Long id) {
+       List<TeamDTO> teamDTOS =  service.teamWorkspace(id);
+        return ResponseEntity.ok(new DataDTO<>(teamDTOS));
+    }
+
+    @Override
+    public ResponseEntity<DataDTO<List<WorkspaceDto>>> myWorkspace(AuthUser authUser) {
+        List<WorkspaceDto> workspaceDtoList = service.myWorkspace(authUser.getId());
+        return ResponseEntity.ok(new DataDTO<>(workspaceDtoList)) ;
     }
 }

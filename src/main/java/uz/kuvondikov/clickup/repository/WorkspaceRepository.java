@@ -9,6 +9,7 @@ import uz.kuvondikov.clickup.entity.Workspace;
 import uz.kuvondikov.clickup.repository.base.BaseRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface WorkspaceRepository extends JpaRepository<Workspace, Long>, BaseRepository {
@@ -16,6 +17,8 @@ public interface WorkspaceRepository extends JpaRepository<Workspace, Long>, Bas
     boolean existsByNameAndOwnerAndDeletedFalse(String name, AuthUser owner);
 
     List<Workspace> findAllByDeletedFalse();
+
+    Optional<Workspace> findByIdAndDeletedFalse(Long id);
 
     Page<Workspace> findByOwnerAndDeletedFalse(Pageable pageable, AuthUser owner);
 }

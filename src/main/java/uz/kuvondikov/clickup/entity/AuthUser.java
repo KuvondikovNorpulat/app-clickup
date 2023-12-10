@@ -12,6 +12,7 @@ import uz.kuvondikov.clickup.entity.template.AbsMainEntity;
 import uz.kuvondikov.clickup.enums.Color;
 import uz.kuvondikov.clickup.enums.SystemRole;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 
@@ -42,6 +43,8 @@ public class AuthUser extends AbsMainEntity implements UserDetails {
     private Attachment avatar;
 
     private String verificationCode;
+
+    private LocalDateTime lastActive;
 
     private boolean accountNonExpired;
     private boolean accountNonLocked;
